@@ -72,7 +72,7 @@ function App() {
                 // แสดงpopup
                 console.log("333");
                 setUserName(userData.firstname);
-                setShowPopup(true); // Trigger popup display
+               (sensorStates.D1 && sensorStates.D2 && sensorStates.D3)? setShowPopup(false):setShowPopup(true); // Trigger popup display
               }
             });
           }
@@ -99,7 +99,14 @@ function App() {
           </div>
         </nav>
       </header>
-    
+    {showPopup && (
+        <div className="popmodel">
+          <div className="popup">
+            <p>{userName} ENTRY</p>
+            <button onClick={() => setShowPopup(false)}>Close</button>
+          </div>
+        </div>
+      )}
     
       <section>
         <div className="main-content">
@@ -153,14 +160,7 @@ function App() {
                   />
                   <h2 className="log3" style={{ display: sensorStates['D3'] ? 'none' : 'block' }}>A3</h2>
                 </div>
-                  {showPopup && (
-        <div className="popmodel">
-          <div className="popup">
-            <p>{userName} ENTRY</p>
-            <button onClick={() => setShowPopup(false)}>Close</button>
-          </div>
-        </div>
-      )}
+                  
               </>
             )}
 
