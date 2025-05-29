@@ -1,0 +1,189 @@
+mport React, { useState } from 'react';
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue, set } from "firebase/database";
+import './App.css';
+
+function App() {
+
+  const firebaseConfig = {
+        apiKey: "AIzaSyBQjepJpw-E5-K6y60R3gD97moqdMaIMik",
+        authDomain: "realtime-parking-bf00c.firebaseapp.com",
+        databaseURL: "https://realtime-parking-bf00c-default-rtdb.firebaseio.com",
+        projectId: "realtime-parking-bf00c",
+        storageBucket: "realtime-parking-bf00c.firebasestorage.app",
+        messagingSenderId: "310377636017",
+        appId: "1:310377636017:web:8091cfbad496b2e4f08290",
+        measurementId: "G-7260PMWZ8L"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+
+  // State to manage the current section being displayed
+  const [currentSection, setCurrentSection] = useState('book');
+  const [selectedBox, setSelectedBox] = useState(null);
+  const [user, setUser] = useState({
+    firstname: 'Vichaiyot',
+    lastname: 'Ngoensiri',
+    profilePicture: 'https://cdn.britannica.com/18/137318-050-29F7072E/rooster-Rhode-Island-Red-roosters-chicken-domestication.jpg'
+  });
+
+  // Function to switch between sections
+  const showSection = (sectionId) => {
+    setCurrentSection(sectionId);
+  };
+
+  // Function to handle box selection
+  const selectBox = (box) => {
+    setSelectedBox(box);
+  };
+
+  // Function to handle login form submission (add your own logic)
+  const handleLogin = (event) => {
+    event.preventDefault();
+    // Add your login logic here (e.g., validation or authentication)
+    alert("Logged in!");
+  };
+
+  return (
+    <div>
+      <header>
+        <nav>
+          <div className="logo">
+            <h1>Realtime Parking</h1>
+          </div>
+          <div className="user">
+            <div className="user-img">
+              <img src={user.profilePicture} alt="user_img" style={{ width: '100%' }} />
+            </div>
+            <div className="user-name">
+              <span className="user-name-fist">{user.firstname}</span>
+              <span className="user-name-last">{user.lastname}</span>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <section>
+        <div className="sliedbar">
+          <div className="litsy" onClick={() => showSection('book')}>
+            <p>Reserve Parking</p>
+          </div>
+          <div className="litsy" onClick={() => showSection('park')}>
+            <p>Parking Car</p>
+          </div>
+          <div className="litsy" onClick={() => showSection('login')}>
+            <p>Login</p>
+          </div>
+        </div>
+
+        <div className="main-content">
+          {currentSection === 'book' && (
+            <div id="book">
+              <div className="haeduser">
+                <div className="userimg-head">
+                  <img src={user.profilePicture} alt="" />
+                </div>
+                <div className="username">
+                  <span className="username-fist">{user.firstname}</span>
+                  <span className="username-last">{user.lastname}</span>
+                </div>
+              </div>
+              <div className="box-book">
+                {['A1', 'A2', 'A3'].map((box) => (
+                  <div
+                    key={box}
+                    className={box ${selectedBox === box ? 'activ' : ''}}
+                    onClick={() => selectBox(box)}
+                  >
+                    <h4>{box}</h4>
+                  </div>
+                ))}
+              </div>
+
+              <div className="exit">
+                <div className="exit-box">
+                  <h2>EXIT</h2>
+                </div>
+              </div>
+            </div>
+          )}
+
+            {currentSection === 'park' && (
+              <div id="park">
+                <div className="barall">
+                  <div className="bar"></div>
+                  <div className="bar"></div>
+                  <div className="bar"></div>
+                  <div className="bar"></div>
+                </div>
+                <div className="car1">
+                  <img className="car1-display" src="./img/car1.png" alt="Car 1" />
+                  <img className="user1-display" src="https://cdn.britannica.com/18/137318-050-29F7072E/rooster-Rhode-Island-Red-roosters-chicken-domestication.jpg" alt="User 1" />
+                </div>
+                <div className="car2">
+                  <img className="car2-display" src="./img/car1.png" alt="Car 2" />
+                  <img className="user2-display" src="https://cdn.britannica.com/18/137318-050-29F7072E/rooster-Rhode-Island-Red-roosters-chicken-domestication.jpg" alt="User 2" />
+                </div>
+                <div className="car3">
+                  <img className="car3-display" src="./img/car1.png" alt="Car 3" />
+                  <img className="user3-display" src="https://cdn.britannica.com/18/137318-050-29F7072E/rooster-Rhode-Island-Red-roosters-chicken-domestication.jpg" alt="User 3" />
+                </div>
+              </div>
+            )}
+
+          {currentSection === 'login' && (
+            <div id="login">
+              <div className="login-container">
+                <h2>Login</h2>
+                <form id="login-form" onSubmit={handleLogin}>
+                  <div className="form-group">
+                    <label htmlFor="firstname">Firstname</label>
+                    <input
+                      type="text"
+                      id="firstname"
+                      name="firstname"
+                      placeholder="Enter your firstname"
+                      required
+                    />
+                    <label htmlFor="lastname">Lastname</label>
+                    <input
+                      type="text"
+                      id="lastname"
+                      name="lastname"
+                      placeholder="Enter your lastname"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group-img">
+                    <label htmlFor="profile-picture">Profile Picture</label>
+                    <input type="file" id="profile-picture" name="profile-picture" accept="image/*" />
+                    <div className="image-preview" id="image-preview">
+                      <p>No image selected</p>
+                    </div>
+                  </div>
+
+                  <div className="form-group-pw">
+                    <label htmlFor="password">Password</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      required
+                    />
+                  </div>
+
+                  <button type="submit" className="btn">
+                    Login
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
